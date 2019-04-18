@@ -1,4 +1,4 @@
-package com.idea.zzy.imitationcollect;
+package com.zzy.idea.imitationcollect;
 
 import org.junit.Test;
 
