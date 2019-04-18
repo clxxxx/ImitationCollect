@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 对话框的背景-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 设置背景的模糊值 -->
+        <item name="android:backgroundDimAmount">0.5</item>
+        <!-- 没有标题 -->
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+</resources>

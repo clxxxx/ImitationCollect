@@ -1,0 +1,97 @@
+import java.text.SimpleDateFormat
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    defaultConfig {
+        applicationId "com.kceria.tunai"
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode rootProject.ext.android["versionCode"]
+        versionName rootProject.ext.android["versionName"]
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+
+        //Java注解编译配置参数 https://blog.csdn.net/u011315960/article/details/64441120
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            keyAlias 'tunai'
+            keyPassword 'android'
+            storeFile file('../keystore.jks')
+            storePassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            // 显示Log
+            debuggable true
+            minifyEnabled false
+            versionNameSuffix "-debug"
+            zipAlignEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            // 不显示Log
+            debuggable false
+            //混淆
+            minifyEnabled true
+            //Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources false
+            //前一部分代表系统默认的android程序的混淆文件，该文件已经包含了基本的混淆声明，后一个文件是自己的定义混淆文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    def outputFile = output.outputFile
+                    def fileName = outputFile.name.replace("-", "_").replace("release.apk", "_v${variant.mergedFlavor.versionCode}_${new SimpleDateFormat("yyyy-MM-dd").format(new Date())}_release.apk")
+                    outputFileName = fileName
+                }
+            }
+        }
+    }
+
+    //    1.additionalParameters:额外参数，List类型。
+//    2.cruncherEnabled：如果PNG图片是否可以大量快速的处理，boolean类型。 true表示可以。
+//    3.cruncherProcesses:快速处理，可能需要更多的内存和CPU。int类型。默认0，值越大处理越快，需要的内存和CPU也越大。
+//    4.failOnMissingConfigEntry:如果没有找到一个配置，就返回一个错误。Boolean值，默认false。
+//    5.ignoreAssetsPattern：忽略Assets模块。
+//    6.moCompress：拓展文件不会打包进apk中。
+    aaptOptions {
+        cruncherEnabled = true//快速处理PNG图片
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation project(':lib_common')
+
+    testImplementation rootProject.ext.dependencies["junit"]
+
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
+}
