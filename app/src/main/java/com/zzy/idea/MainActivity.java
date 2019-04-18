@@ -3,7 +3,6 @@ package com.zzy.idea;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.zzy.idea.imitationcollect.R;
 
 public class MainActivity extends AppCompatActivity {
 
